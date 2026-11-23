@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>style-vocab demo</title>
+<style>
+  /* An invented app. The left card is an existing screen (the reference). The right card is what a
+     coding agent built by copying it: open this file with #fixed to see the corrected version. */
+  :root { --ink: #1c1d21; --muted: #5b5e66; --line: #dcd8cf; --field: #f3f1ec; --accent: #2f5bd3; }
+  * { box-sizing: border-box; margin: 0; }
+  body { font: 15px/1.4 -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color: var(--ink); background: #f6f4ef; padding: 32px; }
+  main { display: flex; gap: 32px; flex-wrap: wrap; }
+  .card { width: 380px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .card h2 { font-size: 16px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-weight: 500; }
+  input, select { font: inherit; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--field); color: var(--ink); }
+  .row { display: flex; gap: 8px; align-items: flex-start; margin-top: 8px; }
+  .row input { flex: 1; min-width: 0; }
+  button { font: inherit; font-weight: 600; height: 36px; padding: 0 16px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; }
+
+  /* What the agent wrote. Each rule is "legal" on its own; lint has nothing to say about it. */
+  #agent:not(.fixed) h2 { padding-left: 24px; }          /* a second container pads the same edge */
+  #agent:not(.fixed) .field label { font-size: 12px; }   /* "text-sm for labels" habit */
+  #agent:not(.fixed) .row button { height: 44px; }       /* a taller button in a row of 36 px controls */
+</style>
+</head>
+<body>
+<main>
+  <section class="card" id="reference" aria-label="Reference">
+    <h2>Edit contact</h2>
+    <div class="field"><label for="r-name">Name</label><input id="r-name" value="Ana Ferreira"></div>
+    <div class="field"><label for="r-email">Email</label><input id="r-email" value="ana@example.com"></div>
+    <div class="row"><input aria-label="Role" value="Role"><select aria-label="Access"><option>Admin</option></select><button>Save</button></div>
+  </section>
+
+  <section class="card" id="agent" aria-label="Agent's version">
+    <h2>Edit team member</h2>
+    <div class="field"><label for="a-name">Name</label><input id="a-name" value="Rui Costa"></div>
+    <div class="field"><label for="a-team">Team</label><input id="a-team" value="Platform"></div>
+    <div class="row"><input aria-label="Role" value="Role"><select aria-label="Access"><option>Editor</option></select><button>Save</button></div>
+  </section>
+</main>
+<script>
+  if (location.hash === "#fixed") document.getElementById("agent").classList.add("fixed");
+</script>
+</body>
+</html>

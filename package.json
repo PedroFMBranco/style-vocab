@@ -1,0 +1,36 @@
+{
+  "name": "style-vocab",
+  "version": "0.1.0",
+  "description": "Check that new UI uses the same computed styles as an existing reference screen. Built for reviewing UI written by coding agents.",
+  "type": "module",
+  "bin": {
+    "style-vocab": "bin/style-vocab.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "skill",
+    "examples",
+    "demo"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "demo": "node bin/style-vocab.mjs compare --url \"file://$PWD/demo/form.html\" --ref '#reference' --new '#agent'",
+    "demo:fixed": "node bin/style-vocab.mjs compare --url \"file://$PWD/demo/form.html#fixed\" --ref '#reference' --new '#agent'"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "playwright": "^1.64.1"
+  },
+  "keywords": [
+    "ui",
+    "design-system",
+    "coding-agents",
+    "playwright",
+    "visual-regression",
+    "claude-code"
+  ],
+  "license": "MIT"
+}
