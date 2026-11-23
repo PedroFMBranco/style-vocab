@@ -1,10 +1,10 @@
 {
-  "name": "style-vocab",
+  "name": "agent-ui-check",
   "version": "0.1.0",
   "description": "Check that new UI uses the same computed styles as an existing reference screen. Built for reviewing UI written by coding agents.",
   "type": "module",
   "bin": {
-    "style-vocab": "bin/style-vocab.mjs"
+    "agent-ui-check": "bin/agent-ui-check.mjs"
   },
   "files": [
     "bin",
@@ -15,8 +15,8 @@
   ],
   "scripts": {
     "test": "node --test test/*.test.mjs",
-    "demo": "node bin/style-vocab.mjs compare --url \"file://$PWD/demo/form.html\" --ref '#reference' --new '#agent'",
-    "demo:fixed": "node bin/style-vocab.mjs compare --url \"file://$PWD/demo/form.html#fixed\" --ref '#reference' --new '#agent'"
+    "demo": "node bin/agent-ui-check.mjs compare --url \"file://$PWD/demo/form.html\" --ref '#reference' --new '#agent'",
+    "demo:fixed": "node bin/agent-ui-check.mjs compare --url \"file://$PWD/demo/form.html#fixed\" --ref '#reference' --new '#agent'"
   },
   "engines": {
     "node": ">=18"

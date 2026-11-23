@@ -12,8 +12,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const page = "file://" + path.join(root, "demo/form.html");
 
 function run(url) {
-    const out = fs.mkdtempSync(path.join(os.tmpdir(), "style-vocab-test-"));
-    const r = spawnSync("node", ["bin/style-vocab.mjs", "compare", "--url", url, "--ref", "#reference", "--new", "#agent", "--out", out], { cwd: root, encoding: "utf8" });
+    const out = fs.mkdtempSync(path.join(os.tmpdir(), "agent-ui-check-test-"));
+    const r = spawnSync("node", ["bin/agent-ui-check.mjs", "compare", "--url", url, "--ref", "#reference", "--new", "#agent", "--out", out], { cwd: root, encoding: "utf8" });
     const report = fs.existsSync(path.join(out, "report.json")) ? JSON.parse(fs.readFileSync(path.join(out, "report.json"), "utf8")) : null;
     return { code: r.status, stdout: r.stdout, stderr: r.stderr, report, out };
 }

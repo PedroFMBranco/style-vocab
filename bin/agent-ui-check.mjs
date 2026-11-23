@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-// style-vocab: open a running app in a browser, and check that a new piece of UI uses only the style
+// agent-ui-check: open a running app in a browser, and check that a new piece of UI uses only the style
 // values (font sizes, weights, colours, gaps, paddings, radii, control heights, insets) that a reference
 // region already uses. Built for reviewing UI written by coding agents.
 //
-//   style-vocab compare --url <base> [--steps <json|file>] --ref '<css>' [--ref ...] --new '<css>'
-//   style-vocab compare --url <base> --steps ... --ref-json saved-ref.json --new '<css>'
-//   style-vocab collect --url <base> [--steps ...] --selector '<css>' [--save ref.json]
-//   style-vocab shot    --url <base> [--steps ...]
-//   style-vocab sweep   --url <base> --plan plan.json --out <dir> [--against <earlier sweep dir>]
+//   agent-ui-check compare --url <base> [--steps <json|file>] --ref '<css>' [--ref ...] --new '<css>'
+//   agent-ui-check compare --url <base> --steps ... --ref-json saved-ref.json --new '<css>'
+//   agent-ui-check collect --url <base> [--steps ...] --selector '<css>' [--save ref.json]
+//   agent-ui-check shot    --url <base> [--steps ...]
+//   agent-ui-check sweep   --url <base> --plan plan.json --out <dir> [--against <earlier sweep dir>]
 //
-// Flags: --viewport 1280x800  --out <dir>  --headed  --config style-vocab.config.json
+// Flags: --viewport 1280x800  --out <dir>  --headed  --config agent-ui-check.config.json
 //        --login <json|file>  steps run once before everything else (sign in)
 // Exit code: 0 = match, 1 = values off the reference or a defect, 2 = usage or runtime error.
 //
@@ -27,7 +27,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const probeSrc = fs.readFileSync(path.join(here, "../src/probe.js"), "utf8");
 const DEFECTS = ["unreachable", "rawKey", "overlap", "rowMismatch"];
 
-const USAGE = `usage: style-vocab compare|collect|shot|sweep --url <base> [options]
+const USAGE = `usage: agent-ui-check compare|collect|shot|sweep --url <base> [options]
 
   compare  --ref <css> [--ref ...] | --ref-json <file>   --new <css>
   collect  --selector <css> [--save <file>]
@@ -169,7 +169,7 @@ async function sweep(page, base, opts, out, config) {
         try {
             for (const step of screen.steps || []) await runStep(page, base, step);
             await install(page, config);
-            const vocab = await page.evaluate((s) => window.__styleVocab.collect(s), screen.selector || "body");
+            const vocab = await page.evaluate((s) => window.__agentUiCheck.collect(s), screen.selector || "body");
             fs.writeFileSync(path.join(out, `${screen.name}.json`), JSON.stringify(vocab, null, 1));
             await page.screenshot({ path: path.join(out, `${screen.name}.png`) });
             const defects = DEFECTS.filter((b) => Object.keys(vocab[b] || {}).length);
@@ -222,10 +222,10 @@ async function main() {
     } catch {
         throw new Error("Playwright is not installed: run `npm install` and `npx playwright install chromium`");
     }
-    const config = loadJson(opts.config, "--config") || (fs.existsSync("style-vocab.config.json") ? loadJson("style-vocab.config.json", "config") : {});
+    const config = loadJson(opts.config, "--config") || (fs.existsSync("agent-ui-check.config.json") ? loadJson("agent-ui-check.config.json", "config") : {});
     const base = opts.url;
     const [vw, vh] = (opts.viewport || "1280x800").split("x").map(Number);
-    const out = opts.out || path.join(os.tmpdir(), "style-vocab", new Date().toISOString().replace(/[:.]/g, "-"));
+    const out = opts.out || path.join(os.tmpdir(), "agent-ui-check", new Date().toISOString().replace(/[:.]/g, "-"));
     fs.mkdirSync(out, { recursive: true });
 
     const browser = await chromium.launch({ headless: !opts.headed });
@@ -248,7 +248,7 @@ async function main() {
         }
         if (cmd === "collect") {
             if (!opts.selector) throw new Error("collect needs --selector");
-            const vocab = await page.evaluate((s) => window.__styleVocab.collect(s), opts.selector);
+            const vocab = await page.evaluate((s) => window.__agentUiCheck.collect(s), opts.selector);
             const file = opts.save || path.join(out, "vocab.json");
             fs.writeFileSync(file, JSON.stringify(vocab, null, 2));
             await shotOf(page, opts.selector, path.join(out, "region.png"));
@@ -266,7 +266,7 @@ async function main() {
         const saved = opts.refJson.map((f) => JSON.parse(fs.readFileSync(f, "utf8")));
         const result = await page.evaluate(
             ({ refSels, saved, newSel }) => {
-                const P = window.__styleVocab;
+                const P = window.__agentUiCheck;
                 const refs = [...saved, ...refSels.map((s) => P.collect(s, newSel))];
                 return P.compareVocab(refs, P.collect(newSel, null, P.enclosing(refSels, newSel)));
             },
@@ -286,7 +286,7 @@ async function main() {
 main().then(
     (code) => process.exit(code),
     (err) => {
-        console.error(`style-vocab: ${err.message}`);
+        console.error(`agent-ui-check: ${err.message}`);
         process.exit(2);
     },
 );

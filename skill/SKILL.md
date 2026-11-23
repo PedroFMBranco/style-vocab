@@ -21,7 +21,7 @@ short: the rules here should be the ones agents actually break, each learned fro
 
 1. **Classify the surface:** <your archetypes: form, dialog, popover, toolbar, list + editor, full page>.
    If you change an existing screen, the reference is that screen's unchanged siblings. Write down the
-   reference file(s) and the style-vocab steps that open the reference in the running app.
+   reference file(s) and the agent-ui-check steps that open the reference in the running app.
 2. **Build from the reference.** Read it completely (template and the components it wraps). Copy its
    outer shell and its section/row/footer structure verbatim. Use the components it uses.
 3. **Follow the hard rules below.**
@@ -29,7 +29,7 @@ short: the rules here should be the ones agents actually break, each learned fro
    0 errors. Fix every warning or justify it in one line.
 5. **Measure in the running app:**
    ```bash
-   npx style-vocab compare --url <app url> --login <login steps file> \
+   npx agent-ui-check compare --url <app url> --login <login steps file> \
      --steps '<steps that open the screen>' --ref '<reference selector>' --new '<new region selector>'
    ```
    It must print MATCH, or you justify each value it lists ("new element type the reference has no
@@ -54,7 +54,7 @@ short: the rules here should be the ones agents actually break, each learned fro
 
 ## Reference files
 
-| Archetype | Copy from | style-vocab steps that open it |
+| Archetype | Copy from | agent-ui-check steps that open it |
 |---|---|---|
 | <form> | `<path>` | `[{"goto": "<path>"}]` |
 | <dialog> | `<path>` | `[{"goto": "..."}, {"click": "..."}]` |

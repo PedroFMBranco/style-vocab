@@ -1,17 +1,17 @@
-# style-vocab
+# agent-ui-check
 
-[![test](https://github.com/PedroFMBranco/style-vocab/actions/workflows/test.yml/badge.svg)](https://github.com/PedroFMBranco/style-vocab/actions/workflows/test.yml)
+[![test](https://github.com/PedroFMBranco/agent-ui-check/actions/workflows/test.yml/badge.svg)](https://github.com/PedroFMBranco/agent-ui-check/actions/workflows/test.yml)
 
 Checks that new UI only uses style values a reference screen already uses: font sizes, weights, colours, spacing, radii, control heights and alignment, measured in the running app.
 
-Coding agents copy an existing screen and change it. In a codebase that has drifted, they copy whichever drift they opened first, and lint can't tell: every class they wrote is legal. `style-vocab` opens the running app, measures the reference region and the new region, and lists every value the new one uses that the reference never does.
+Coding agents copy an existing screen and change it. In a codebase that has drifted, they copy whichever drift they opened first, and lint can't tell: every class they wrote is legal. `agent-ui-check` opens the running app, measures the reference region and the new region, and lists every value the new one uses that the reference never does.
 
 ![A reference form and an agent's copy, measured: title inset, label size and row height are off; after the fix the check prints MATCH](docs/demo.gif)
 
 ## Try it (2 minutes)
 
 ```bash
-git clone https://github.com/PedroFMBranco/style-vocab && cd style-vocab
+git clone https://github.com/PedroFMBranco/agent-ui-check && cd agent-ui-check
 npm install && npx playwright install chromium
 npm run demo         # the agent's version: 4 values off the reference, exit code 1
 npm run demo:fixed   # the corrected version: MATCH, exit code 0
@@ -62,14 +62,14 @@ It compares computed values, not class names. Identical classes can render diffe
 Install it in your project from GitHub (it isn't on npm yet), plus a browser for Playwright:
 
 ```bash
-npm install -D github:PedroFMBranco/style-vocab
+npm install -D github:PedroFMBranco/agent-ui-check
 npx playwright install chromium
 ```
 
 Then point it at your running app:
 
 ```bash
-npx style-vocab compare --url http://localhost:5173 \
+npx agent-ui-check compare --url http://localhost:5173 \
   --login login.json \
   --steps '[{"goto": "/settings"}, {"click": "text=Edit profile"}]' \
   --ref '[data-test=settings-page]' --new '[data-test=profile-dialog]'
@@ -85,7 +85,7 @@ npx style-vocab compare --url http://localhost:5173 \
 
 ### Component libraries
 
-Inputs, dropdowns and buttons from a component library set their own internal padding and radius. Tell `style-vocab` which elements are library components, so their insides aren't compared. Their font size and height still are, so overrides still show up. Put this in `style-vocab.config.json`, or pass it with `--config`:
+Inputs, dropdowns and buttons from a component library set their own internal padding and radius. Tell `agent-ui-check` which elements are library components, so their insides aren't compared. Their font size and height still are, so overrides still show up. Put this in `agent-ui-check.config.json`, or pass it with `--config`:
 
 ```json
 {
@@ -97,7 +97,7 @@ Inputs, dropdowns and buttons from a component library set their own internal pa
 
 ### Without the CLI
 
-[src/probe.js](src/probe.js) is self-contained. Paste it into a devtools console, or into a browser MCP tool's `evaluate_script`, then call `window.__styleVocab.compare('#reference', '#new')`.
+[src/probe.js](src/probe.js) is self-contained. Paste it into a devtools console, or into a browser MCP tool's `evaluate_script`, then call `window.__agentUiCheck.compare('#reference', '#new')`.
 
 ## The other two layers
 
@@ -105,7 +105,7 @@ Measuring is the last of three checks I give coding agents for UI work:
 
 1. **Reference first.** The agent names the kind of surface and copies the structure of a reference from an approved list, not whatever it opens. [skill/SKILL.md](skill/SKILL.md) is a template for a Claude Code skill that does this. Fill in your own archetypes, reference files, drift list and rules.
 2. **Lint the diff.** This check is static: it reads code and never sees the page. [examples/diff-lint.mjs](examples/diff-lint.mjs) is a minimal lint over added lines only. For Tailwind projects, [@shadcn/lint](https://github.com/shadcn-ui/lint) does this properly, with per-component contracts.
-3. **Measure the render** with `style-vocab`, then look at the screenshots.
+3. **Measure the render** with `agent-ui-check`, then look at the screenshots.
 
 ## Requirements
 

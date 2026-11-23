@@ -1,11 +1,11 @@
 (options = {}) => {
-    // Installs window.__styleVocab in the page. Self-contained: the CLI evaluates it through Playwright, and
+    // Installs window.__agentUiCheck in the page. Self-contained: the CLI evaluates it through Playwright, and
     // you can paste it into any devtools console or an MCP `evaluate_script` call as-is.
     //
-    //   __styleVocab.collect(selector)          -> style vocabulary of one region
-    //   __styleVocab.compare(refSel, newSel)    -> values the new region uses that the reference never does
-    //   __styleVocab.compareVocab([refVocab], newVocab) -> same, for vocabularies collected earlier
-    //   __styleVocab.env()                      -> root/body font size and viewport (check before comparing)
+    //   __agentUiCheck.collect(selector)          -> style vocabulary of one region
+    //   __agentUiCheck.compare(refSel, newSel)    -> values the new region uses that the reference never does
+    //   __agentUiCheck.compareVocab([refVocab], newVocab) -> same, for vocabularies collected earlier
+    //   __agentUiCheck.env()                      -> root/body font size and viewport (check before comparing)
     //
     // "Vocabulary" = the set of computed font sizes, weights, colours, text-transforms, gaps, paddings,
     // radii, border colours, control heights and icon sizes rendered inside a region, plus where its
@@ -57,7 +57,7 @@
 
     const resolve = (sel) => {
         const el = typeof sel === "string" ? document.querySelector(sel) : sel;
-        if (!el) throw new Error("style-vocab: selector matched nothing: " + sel);
+        if (!el) throw new Error("agent-ui-check: selector matched nothing: " + sel);
         return el;
     };
 
@@ -360,6 +360,6 @@
         };
     }
 
-    window.__styleVocab = { collect, compare, compareVocab, enclosing, env };
-    return "style-vocab installed: " + JSON.stringify(env());
+    window.__agentUiCheck = { collect, compare, compareVocab, enclosing, env };
+    return "agent-ui-check installed: " + JSON.stringify(env());
 }
